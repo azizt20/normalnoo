@@ -1,0 +1,210 @@
+{% extends './layouts/base.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>Booking</title>
+{% endblock title %}
+{% block css %}
+    <link rel="icon" sizes="" type="image/png" href="img/logo.svg">
+
+    <link rel="stylesheet" href="{% static 'css/daterangepicker.css' %}">
+{% endblock %}
+
+
+{% block wrapper %}wrapper-booking{% endblock wrapper %}
+
+{% block content %}
+
+    <section class="section1 " style="padding-top: 200px">
+        <div class="container  info">
+            <h2>Бронирование номера</h2>
+            <form id="post_p" method="post" action="{% url  'post-booking' %}?slug={{ room.slug }}">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div class="col-md-10  ">
+
+                                <form class="personal-info">
+                                    <h3 class="info-title">Личная информация</h3>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-4 col-form-label">Имя и
+                                            фамилия</label>
+                                        <div class="col-sm-8">
+                                            <input type="text" name="user_name" class="form-control" id="inputName">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-sm-4 col-form-label">Номер
+                                            телефона</label>
+                                        <div class="col-sm-8">
+                                            <input type="tel" name="phone_number"
+                                                   placeholder="+998 _ _ _ _ _ _ _ _ _"
+                                                   class="form-control"
+                                                   id="inputName">
+
+                                            {#                                            <div data-errors-for="phone_number">#}
+                                            {#                                                <small class="form-error"#}
+                                            {#                                                       data-errors-when="patternMismatch">#}
+                                            {#                                                    Please enter a valid phone number.#}
+                                            {#                                                </small>#}
+                                            {#                                            </div>#}
+                                            {% if messages %}
+                                                {% for message in messages %}
+                                                    <small class="text-danger ">{{ message }}</small>
+                                                {% endfor %}
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-sm-4 col-form-label">Email</label>
+                                        <div class="col-sm-8">
+                                            <input type="email" name="email" class="form-control" id="inputEmail3">
+                                        </div>
+                                    </div>
+
+                                    <h3 class="pay-title">Способ оплаты </h3>
+                                    <fieldset class="form-group row row-cols-1 row-cols-md-3  d-flex px-3">
+                                        <div class="form-check ">
+                                            <input class="form-check-input" type="radio" name="pay" id="gridRadios1"
+                                                   value="cash" checked>
+                                            <label class="form-check-label" for="gridRadios1">
+                                                Наличными
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="pay" id="gridRadios2"
+                                                   value="payme">
+                                            <label class="form-check-label" for="gridRadios2">
+                                                <img src="{% static 'img/booking/payme.png' %}" alt="">
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="pay" id="gridRadios3"
+                                                   value="click">
+                                            <label class="form-check-label" for="gridRadios3">
+                                                <img src="{% static 'img/booking/click.png' %}" alt="">
+                                            </label>
+                                        </div>
+
+
+                                    </fieldset>
+                                </form>
+
+                                <p class="address">
+                                    Оплатить наличными можно в нашем офисе в Ташкенте.
+                                    Адрес: Шайхантахурский район, 45-12.
+                                </p>
+                                <a href="" class="location">
+                                    Карта проезда
+                                </a>
+
+
+                            </div>
+                        </div>
+                        <div class="col-12 important px-0">
+                            <h3>
+                                Важно знать перед приездом
+                            </h3>
+                            <div class="paragraph d-flex">
+                                <div>
+                                    <img src="{% static 'img/room/v.png' %}" alt="" class="">
+                                </div>
+                                <sapn>У нас действует 100% предоплата любым удобным для вас способом</sapn>
+                            </div>
+
+                            <div class="paragraph d-flex">
+                                <div>
+                                    <img src="{% static 'img/room/v.png' %}" alt="" class="">
+                                </div>
+                                <sapn>Заезд в номер в 14:00, выезд в 12:00.</sapn>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 ">
+                        <input type="hidden" name="room" value="{{ room.type }}">
+                        <input type="hidden" name="start_date" value="{{ request.GET.sd }}">
+                        <input type="hidden" name="finish_date" value="{{ request.GET.ed }}">
+                        <input type="hidden" name="order_cost" value="{{ room.cost_day }}">
+                        <input type="hidden" name="days">
+                        {#                        <input type="hidden" name="finish_date" value="{{ request.GET.ed }}">#}
+
+                        <div class="col form mx-md-auto " style="width: 380px;">
+                            <div class="form-group">
+                                <div style="font-size: 25px;" class="mb-4 text-center"><b>Найти номер</b></div>
+                                <span>Вид номера</span>
+                                <div class="dropdown  p-0 d-flex align-items-center w-100">
+                                    <button class="btn w-100 justify-content-center form-control" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                        {{ room.type }}
+                                    </button>
+                                    <div class="dropdown-menu d-none" aria-labelledby="dropdownMenuButton">
+                                        {% for room_info in r_all %}
+
+
+
+                                            <a class="dropdown-item sect d-flex align-items-center"
+                                                    {#                                           href="{{ room_info.get_absolute_url }}"#}
+                                               data-cost="{{ room_info.cost_day }}">
+                                                <span>{{ room_info.type }}</span>
+                                                <div class="ml-auto">от {{ room_info.min_cost }} млн</div>
+                                            </a>
+
+                                        {% endfor %}
+
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <span>Прибытие</span>
+                                    </div>
+                                    <div class="col-6">
+                                        <span>Выезд</span>
+                                    </div>
+                                </div>
+                                <input type="text" id="picker" class="form-control text-center" name="s&f_date"
+                                        {% if not request.session.st_d == '' and not request.session.an_d == '' %}
+                                       value="{{ request.session.st_d }} - {{ request.session.en_d }}"
+                                        {% endif %}
+
+                                        {% if request.GET.sd %}
+                                       value="{{ request.GET.sd }} - {{ request.GET.ed }}"
+                                        {% endif %} >
+
+
+                                <div class="form-control border-0 mt-0 p-0  h-auto total_cost"
+                                     style="font-size: 20px; text-align: center;"><b
+                                        class="total_cost_e" data-cost="{{ room.cost_day }}">{{ room.cost_day }} млн
+                                    сумов</b></div>
+                                <a>
+                                    <button type="submit" class="btn w-100 booking">Забронировать</button>
+                                </a>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </section>
+{% endblock content %}
+
+{% block js %}
+    <script>
+        var qwqw = []
+        {% for i in busy %}
+            qwqw.push('{{ i.year }}-{{ i.month }}-{{i.day}}')
+        {% endfor %}
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/daterangepicker.js' %}"></script>
+{% endblock %}
+
+

@@ -1,0 +1,22 @@
+{
+  'room': <RoomType
+  :
+  Standart>,
+  'r_all': <QuerySet [
+  <RoomType
+  :
+  Standart>
+]>, 'Standart':
+[
+  datetime.date(2021, 8, 18),
+  datetime.date(2021, 8, 19),
+datetime.date(2021, 8, 20),
+datetime.date(2021, 8, 24),
+datetime.date(2021, 8, 25),
+datetime.date(2021, 8, 26),
+datetime.date(2021, 8, 20),
+datetime.date(2021, 8, 21),
+datetime.date(2021, 8, 22),
+datetime.date(2021, 8, 23),
+datetime.date(2021, 8, 24)]
+}

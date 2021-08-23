@@ -1,0 +1,188 @@
+{% extends './layouts/base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}
+    <title>Relax</title>
+{% endblock title %}
+{% block css %}
+    <link rel="stylesheet" href="{% static 'css/slick-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/slick.css' %}">
+{% endblock %}
+
+
+
+{% block wrapper %}wrapper-relax{% endblock wrapper %}
+
+
+{% block content %}
+
+
+        <section class="section1 " style="padding-top: 218px !important"    >
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5 d-flex flex-column justify-content-center">
+                        <div class="content">
+                            <div class="position-relative">
+                                <h1 class="title position-absolute">
+                                    Отдохнуть <br>
+                                    и расслабиться
+                                </h1>
+                            </div>
+                            <div class="text-head ">
+                                СПА, массаж, дискотеки, закрытый <br> бассейн и многое другое
+
+                            </div>
+                            {% with r_all|first as first_one %}
+                                <a href="{% url 'room-name' first_one.slug %}" class="booking btn">
+                                    Забронировать номер
+                                </a>
+                            {% endwith %}
+                        </div>
+                    </div>
+                    <div class="col-md-7 text-right">
+                        <img src="{% static 'img/relax/head.jpg' %}" class="img-fluid " alt="">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section2 w-100">
+            <div class="container ">
+                <h2 class="position-relative">
+                    <div class="bg-svet d-none d-lg-block" style="overflow-x: hidden !important;"></div>
+
+                    СПА, сауна, <br>
+                    турецкий хаммам
+                </h2>
+            </div>
+
+            <div class="slideres" style="margin-left: 15%">
+                <div class="slick1 slider p-0">
+                    <div class="content-slider">
+                        <img src="{% static 'img/relax/4444.jpg' %}" class="img-fluid" alt="">
+                    </div>
+                    <div class="content-slider">
+                        <img src="{% static 'img/relax/head.jpg' %}" class="img-fluid" alt="">
+                    </div>
+                    <div class="content-slider">
+                        <img src="{% static 'img/relax/4444.jpg' %}" class="img-fluid" alt="">
+                    </div>
+                    <div class="content-slider">
+                        <img src="{% static 'img/relax/4444.jpg' %}" class="img-fluid" alt="">
+                    </div>
+                    <div class="content-slider">
+                        <img src="{% static 'img/relax/4444.jpg' %}" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <section class="section3">
+            <div class="container">
+                <div class="row row-cols-md-2 row-cols-1">
+                    <div class="col d-flex flex-column justify-content-between">
+                        <h2 class="text">
+                            Солевая пещера <br>
+                            и зимний бассейн
+                        </h2>
+                        <img src="{% static 'img/relax/3-1.jpg' %}" alt="" class="img-fluid ">
+
+                    </div>
+                    <div class="col">
+                        <img src="{% static 'img/relax/3-2.jpg' %}" alt="" class="img-fluid ">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8">
+                        <img src="{% static 'img/relax/massaj.jpg' %}" alt="" class="img-fluid">
+                    </div>
+                    <div class="col-md-4 d-flex flex-column justify-content-end">
+                        <h2>
+                            4 вида массажа <br>
+                            от <br class="d-none"> настояшего <br>
+                            физиотерапевта
+                        </h2>
+                        <div>
+                            Классический, спортивный, <br> баночный и медовый массаж
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <section class="section5">
+            <div class="container">
+                <h2>
+                    Детские площадки <br>
+                    и аниматоры по выходным
+                </h2>
+                <div class="row">
+                    <div class="col-md-6">
+                        <img src="{% static 'img/relax/5-1.jpg' %}" alt="" class="img-fluid">
+                    </div>
+                    <div class="col-md-6">
+                        <img src="{% static 'img/relax/5-2.jpg' %}" alt="" class="img-fluid">
+                    </div>
+                    <div class="col">
+                        <img src="{% static 'img/relax/5-3.jpg' %}" alt="" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section6">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2 class="position-relative">
+                            <div class="bg-svet" style="overflow-x: hidden"></div>
+                            DJ, дискотеки <br>
+                            каждый день
+                        </h2>
+                        <div>
+                            Самые последние хиты и <br>
+                            авторские сеты от талантливых диджеев
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <img src="{% static 'img/relax/6.jpg' %}" alt="" class="img-fluid">
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+{% endblock content %}
+
+{% block js %}
+
+    <script src="{% static 'js/slick.min.js' %}"></script>
+    <script>
+
+        $('.slick1').slick({
+            dots: true,
+            infinite: true,
+            speed: 300,
+            slidesToShow: 1,
+            startMode: true,
+            variableWidth: true,
+        });
+
+
+    </script>
+
+{% endblock %}

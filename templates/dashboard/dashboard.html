@@ -1,0 +1,531 @@
+{% load my_filter %}
+{% load static tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <title>Dashboard</title>
+    <style>
+        th {
+            width: 10px !important;
+            height: 15px !important;
+        }
+
+        .restDay {
+            background-color: #5a5e63;
+        }
+
+        .popover {
+            color: black;
+        }
+
+        .thhover:hover {
+            background-color: #0c5460;
+        }
+
+        body {
+            background-color: #343a40;
+            color: white;
+        }
+
+        .ordered {
+            background-color: rgba(139, 0, 0, 0.39);
+        }
+
+        .ordered:hover {
+            background-color: firebrick;
+        }
+    </style>
+</head>
+<body class=" w-100">
+
+<nav class="navbar container navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Heavns Garden</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarScroll"
+            aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav mr-auto my-2 my-lg-0 navbar-nav-scroll" style="max-height: 100px;">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'dashboard' %}">Dashboard <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'order_list' %}">Orders List<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'online-order_list' %}">Online orders List<span class="sr-only">(current)</span></a>
+            </li>
+
+        </ul>
+        <div class="d-flex">
+
+            <a class="btn btn-outline-danger" href="{% url 'logout' %}" type="submit">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                          d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z"/>
+                    <path fill-rule="evenodd"
+                          d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</nav>
+
+
+{#<div class="row">#}
+<div class="  w-100 p-0 overflow-auto">
+    <div class="d-flex px-2 py-2 border justify-content-between">
+        <div class="h5 my-0">Today: {{ current_Date }}</div>
+        <div class="d-flex">
+            <a class="btn btn-dark mr-5" href="{% url 'dashboard' %}">today</a>
+            <input name="date" class="form-control mr-2 choosedate" type="date" placeholder="" aria-label="Search">
+            <a href="{% url 'dashboard' %}" class="btn btn-success tugma" type="submit">reset</a>
+        </div>
+    </div>
+    <table class="table table-bordered table-dark ">
+        <thead>
+        <tr>
+            <th scope="col" class="p-0">#</th>
+            {#    {% if month %}adasdasdasd{% endif %}#}
+            {% for days in month %}
+                {% if days.date == current_Date %}
+                    <th scope="col" class="p-0 text-center" style="background-color: lightsteelblue">{{ days.day }}</th>
+                {% elif days.weekday == 5 or days.weekday == 6 %}
+                    <th scope="col" class="p-0 text-center restDay">{{ days.day }}</th>
+                {% else %}
+                    <th scope="col" class="p-0 text-center">{{ days.day }}</th>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        </thead>
+        <tbody class="">
+
+        {% for typr in types %}
+            {% if request.user|has_group:"Hotel" and not typr.is_villa or request.user.is_superuser %}
+                <tr class="" style="background-color: #525c66">
+                    <th scope="row">{{ typr }}</th>
+                    <th scope="col" colspan="30"></th>
+                </tr>
+                {% for room in rooms %}
+                    {% if room.room_type == typr %}
+                        <tr>
+                            <th scope="row" class="small">{{ room.slug }}</th>
+                            {% for days in month %}
+                                {% build_key room days as key %}
+                                {% if key not in skip %}
+                                    {% if key in data %}
+                                        {% get_item data key as found %}
+                                        <th scope="col" colspan="{{ found.diff_days }}"
+                                            data-id="{{ found.id }}"
+                                            data-room="{{ found.room.slug }}"
+                                            data-slug="{{ found.slug }}"
+                                            data-sday="{{ found.start_date.day }}"
+                                            data-smonth="{{ found.start_date.month }}"
+                                            data-syear="{{ found.start_date.year }}"
+                                            data-fday="{{ found.finish_date.day }}"
+                                            data-fmonth="{{ found.finish_date.month }}"
+                                            data-fyear="{{ found.finish_date.year }}"
+                                            data-price="{{ found.order_cost }}"
+                                            data-name="{{ found.user_name }}"
+                                            data-phone="{{ found.phone_number }}"
+                                            data-email="{{ found.email }}"
+                                            class="{% if found.finish_date <= current_Date %}
+                                        bg-secondary
+                                        {% else %}
+                                        ordered
+                                        {% endif %}
+                                            ali"><a type="button"
+                                                {% if found.finish_date <= current_Date %}
+                                                {% else %}
+                                                    data-toggle="modal" data-target="#exampleModal2"
+                                                {% endif %}
+                                                    tabindex="0" data-toggle="tooltip"
+                                                    title="Name {{ found.user_name }},
+                                                start date  {{ found.start_date }},
+                                                finish date {{ found.finish_date }},
+                                                phone {{ found.phone_number }},
+                                                PRICE {{ found.order_cost }}">{{ found.user_name }}</a>
+                                        </th>
+                                    {% else %}
+                                        <th data-day="{{ days.day }}"
+                                            data-month="{{ days.month }}"
+                                            data-year="{{ days.year }}"
+                                            data-room="{{ room.slug }}"
+                                            data-cost="{{ room.cost_per_day }}"
+                                            data-toggle="modal"
+                                            data-target="#exampleModal"
+                                            scope="col" colspan="" class="
+                                        {% if days.weekday == 5 or days.weekday == 6 %}
+                                            restDay
+                                        {% else %}thhover{% endif %} aziz"></th>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% elif request.user|has_group:"Villa" and typr.is_villa or request.user.is_superuser %}
+                <tr class="" style="background-color: #525c66">
+                    <th scope="row">{{ typr }}</th>
+                    <th scope="col" colspan="30"></th>
+                </tr>
+                {% for room in rooms %}
+                    {% if room.room_type == typr %}
+                        <tr>
+                            <th scope="row" class="small">{{ room.slug }}</th>
+                            {% for days in month %}
+                                {% build_key room days as key %}
+                                {% if key not in skip %}
+                                    {% if key in data %}
+                                        {% get_item data key as found %}
+                                        <th scope="col" colspan="{{ found.diff_days }}"
+                                            data-id="{{ found.id }}"
+                                            data-room="{{ found.room.slug }}"
+                                            data-slug="{{ found.slug }}"
+                                            data-sday="{{ found.start_date.day }}"
+                                            data-smonth="{{ found.start_date.month }}"
+                                            data-syear="{{ found.start_date.year }}"
+                                            data-fday="{{ found.finish_date.day }}"
+                                            data-fmonth="{{ found.finish_date.month }}"
+                                            data-fyear="{{ found.finish_date.year }}"
+                                            data-price="{{ found.order_cost }}"
+                                            data-name="{{ found.user_name }}"
+                                            data-phone="{{ found.phone_number }}"
+                                            data-email="{{ found.email }}"
+                                            class="{% if found.finish_date <= current_Date %}
+                                        bg-secondary
+                                        {% else %}
+                                        ordered
+                                        {% endif %}
+                                            ali"><a type="button"
+                                                {% if found.finish_date <= current_Date %}
+                                                {% else %}
+                                                    data-toggle="modal" data-target="#exampleModal2"
+                                                {% endif %}
+                                                    tabindex="0" data-toggle="tooltip"
+                                                    title="Name {{ found.user_name }},
+                                                start date  {{ found.start_date }},
+                                                finish date {{ found.finish_date }},
+                                                phone {{ found.phone_number }},
+                                                PRICE {{ found.order_cost }}">{{ found.user_name }}</a>
+                                        </th>
+                                    {% else %}
+                                        <th data-day="{{ days.day }}"
+                                            data-month="{{ days.month }}"
+                                            data-year="{{ days.year }}"
+                                            data-room="{{ room.slug }}"
+                                            data-cost="{{ room.cost_per_day }}"
+                                            data-toggle="modal"
+                                            data-target="#exampleModal"
+                                            scope="col" colspan="" class="
+                                        {% if days.weekday == 5 or days.weekday == 6 %}
+                                            restDay
+                                        {% else %}thhover{% endif %} aziz"></th>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+        {% endfor %}
+        </tbody>
+    </table>
+{% if request.user.is_superuser %}
+<a class="ml-2 btn btn-primary" href="/admin/booking/room/add/">Add room</a>
+<a class="ml-2 btn btn-primary" href="/admin/dashboard/user_staff/add/">Add staff</a>
+{% endif %}
+
+</div>
+{#</div>#}
+
+
+<!-- Modal -->
+<div class="modal fade text-secondary" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'dashboard_post' %}" method="POST">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {#                    {{ form }}#}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Room</label>
+                                <select name="room" class="form-control roomme" id="exampleFormControlSelect1">
+                                    {% for room in rooms %}
+                                        {% if request.user|has_group:"Hotel" and not room.room_type.is_villa or request.user.is_superuser %}
+                                            <option>{{ room.slug }}</option>
+                                        {% elif request.user|has_group:"Villa" and room.room_type.is_villa or request.user.is_superuser %}
+                                            <option>{{ room.slug }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Slug</label>
+                                <input type="text" name="slug" class="form-control" id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Start date</label>
+                                <input type="date" name="start" value="" class="form-control startme date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Finish date</label>
+                                <input type="date" name="finish" value="" class="form-control date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Price</label>
+                                <input type="number" name="price" value="" class="form-control date-form cost"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Name</label>
+                                <input type="text" name="name" value="" class="form-control date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Phone Number</label>
+                                <input type="text" name="number" value="+998" class="form-control date-form"
+                                       id="exampleFormControlInput1">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Email</label>
+                                <input type="email" name="email" class="form-control date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="name@example.com">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal 2-->
+<div class="modal fade text-secondary" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'edit' %}" method="POST">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <input name="id" class="idme" style="display: none">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Room</label>
+                                <select name="room" class="form-control roomme" id="exampleFormControlSelect1">
+
+                                    {% for room in rooms %}
+                                        {% if request.user|has_group:"Hotel" and not room.room_type.is_villa or request.user.is_superuser %}
+                                            <option>{{ room.slug }}</option>
+                                        {% elif request.user|has_group:"Villa" and room.room_type.is_villa or request.user.is_superuser %}
+                                            <option>{{ room.slug }}</option>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Slug</label>
+                                <input type="text" name="slug" class="form-control slug" id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Start date</label>
+                                <input type="date" name="start" value="" class="form-control startme date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Finish date</label>
+                                <input type="date" name="finish" value="" class="form-control finishme date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Price</label>
+                                <input type="number" name="price" value="" class="form-control date-form cost"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Name</label>
+                                <input type="text" name="name" value="" class="form-control name date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Phone Number</label>
+                                <input type="text" name="number" value="+998" class="form-control phone date-form"
+                                       id="exampleFormControlInput1">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Email</label>
+                                <input type="email" name="email" class="form-control email date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="name@example.com">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Edit order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Generated markup by the plugin -->
+<div class="tooltip bs-tooltip-top" role="tooltip">
+    <div class="arrow"></div>
+    <div class="tooltip-inner">
+        Mingir mingir
+    </div>
+</div>
+
+
+<script src="{% static 'js/popper.min.js' %}"></script>
+<script src="{% static 'js/jquary.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script>
+
+    $(".choosedate").change(function () {
+        console.log('ishlabturibdi')
+        a = $(this).val()
+        $('a.tugma').attr('href', "{% url 'dashboard' %}" + a + "/")
+    })
+
+
+    $('.aziz').click(function () {
+        let day = $(this).data("day")
+        let month = $(this).data("month")
+        let year = $(this).data("year")
+        let b = $(this).data("room")
+        let cost = $(this).data("cost")
+        console.log(b)
+        $("select.roomme").val(b)
+        if (String(month).length > 1) {
+            if (String(day).length > 1) {
+                $(".startme").val(year + '-' + month + '-' + day)
+            } else {
+                $(".startme").val(year + '-' + month + '-0' + day)
+            }
+        } else {
+            if (String(day).length > 1) {
+                $(".startme").val(year + '-0' + month + '-' + day)
+            } else {
+                $(".startme").val(year + '-0' + month + '-0' + day)
+            }
+        }
+        $('.cost').val(cost)
+
+
+    })
+
+    $('.popover-dismiss').popover({
+        trigger: 'focus'
+    })
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+
+    $('.ali').click(function () {
+
+        $('.idme').val($(this).data("id"))
+
+        $('select.roomme').val($(this).data("room"))
+
+        $('.slug').val($(this).data('slug'))
+
+        let sday = $(this).data("sday")
+        let smonth = $(this).data("smonth")
+        let syear = $(this).data("syear")
+
+        if (String(smonth).length > 1) {
+            if (String(sday).length > 1) {
+                $(".startme").val(syear + '-' + smonth + '-' + sday)
+            } else {
+                $(".startme").val(syear + '-' + smonth + '-0' + sday)
+            }
+        } else {
+            if (String(sday).length > 1) {
+                $(".startme").val(syear + '-0' + smonth + '-' + sday)
+            } else {
+                $(".startme").val(syear + '-0' + smonth + '-0' + sday)
+            }
+        }
+
+        let fday = $(this).data("fday")
+        let fmonth = $(this).data("fmonth")
+        let fyear = $(this).data("fyear")
+
+        if (String(fmonth).length > 1) {
+            if (String(fday).length > 1) {
+                $(".finishme").val(fyear + '-' + fmonth + '-' + fday)
+            } else {
+                $(".finishme").val(fyear + '-' + fmonth + '-0' + fday)
+            }
+        } else {
+            if (String(fday).length > 1) {
+                $(".finishme").val(fyear + '-0' + fmonth + '-' + fday)
+            } else {
+                $(".finishme").val(fyear + '-0' + fmonth + '-0' + fday)
+            }
+        }
+
+        $('.cost').val($(this).data("price"))
+
+        $('.name').val($(this).data("name"))
+
+        $('.phone').val($(this).data("phone"))
+
+        $('.email').val($(this).data("email"))
+
+
+    })
+</script>
+</body>
+</html>

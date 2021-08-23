@@ -1,0 +1,276 @@
+{% load my_filter %}
+{% load static tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <title>Dashboard</title>
+    <STYLE>
+        body {
+            background-color: #343a40;
+            color: white;
+        }
+    </STYLE>
+
+
+</head>
+<body class=" w-100">
+<nav class="navbar container navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Heavns Garden</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarScroll"
+            aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarScroll">
+        <ul class="navbar-nav mr-auto my-2 my-lg-0 navbar-nav-scroll" style="max-height: 100px;">
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'dashboard' %}">Dashboard <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'order_list' %}">Orders List<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'online-order_list' %}">Online orders List<span class="sr-only">(current)</span></a>
+            </li>
+
+        </ul>
+                <form class="d-flex" action="{% url 'online-order_list' %}" method="post">
+                    {% csrf_token %}
+                    <input name="names" class="form-control mr-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+    </div>
+</nav>
+
+<div class="container">
+    <table class="table table-dark">
+        <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">created time</th>
+            <th scope="col">phone</th>
+            <th scope="col">name</th>
+            <th scope="col">start date</th>
+            <th scope="col">finish date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for i in orders %}
+
+            <tr>
+                <th scope="row">{{ i.id }}</th>
+                <td><a href="{% url 'dashboard' %}">{{ i.created_at }}</a></td>
+                <td><a href="tel:{{ i.phone_number }}">{{ i.phone_number }}</a></td>
+                <td>{{ i.user_name }}</td>
+                <td>{{ i.start_date }}</td>
+                <td>{{ i.finish_date }}</td>
+                <td>
+                    <button class="btn btn-primary aziz"  data-toggle="modal"
+                                            data-target="#exampleModal{{ i.id }}">accept</button>
+                    <a href="{% url 'delete_waiting' i.id %}" class="btn btn-danger">decline</a>
+                </td>
+
+            </tr>
+<!-- Modal -->
+<div class="modal fade text-secondary" id="exampleModal{{ i.id }}" tabindex="-1" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'dashboard_post' %}" method="POST">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    {#                    {{ form }}#}
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Room</label>
+                                <label class="small text-danger">{{ i.room }}</label>
+                                <select name="room" class="form-control roomme" id="exampleFormControlSelect1">
+                                    {% for room in rooms %}
+                                        {% if request.user|has_group:"Hotel" and not room.room_type.is_villa or request.user.is_superuser %}
+                                            <option>{{ room.slug }}</option>
+                                        {% elif request.user|has_group:"Villa" and room.room_type.is_villa or request.user.is_superuser %}
+                                            <option>{{ room.slug }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Slug</label>
+                                <input type="text" name="slug" class="form-control" id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Start date</label>
+                                <label class="small text-danger">{{ i.start_date }}</label>
+                                <input type="date" name="start" value="" class="form-control startme date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Finish date</label>
+                                <label class="small text-danger">{{ i.finish_date }}</label>
+                                <input type="date" name="finish" value="" class="form-control date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Price</label>
+                                <input type="number" name="price" value="" class="form-control date-form cost"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Name</label>
+                                <input type="text" name="name" value="{{ i.user_name }}" class="form-control date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Phone Number</label>
+                                <input type="text" name="number" value="{{ i.phone_number }}" class="form-control date-form"
+                                       id="exampleFormControlInput1">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlInput1">Email</label>
+                                <input type="email" name="email" value="{{ i.email }}" class="form-control date-form"
+                                       id="exampleFormControlInput1"
+                                       placeholder="name@example.com">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save order</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+<script src="{% static 'js/jquary.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script>
+
+    $(".choosedate").change(function () {
+        console.log('ishlabturibdi')
+        a = $(this).val()
+        $('a.tugma').attr('href', "{% url 'dashboard' %}" + a + "/")
+    })
+
+
+    $('.aziz').click(function () {
+        let day = $(this).data("day")
+        let month = $(this).data("month")
+        let year = $(this).data("year")
+        let b = $(this).data("room")
+        let cost = $(this).data("cost")
+        console.log(b)
+        $("select.roomme").val(b)
+        if (String(month).length > 1) {
+            if (String(day).length > 1) {
+                $(".startme").val(year + '-' + month + '-' + day)
+            } else {
+                $(".startme").val(year + '-' + month + '-0' + day)
+            }
+        } else {
+            if (String(day).length > 1) {
+                $(".startme").val(year + '-0' + month + '-' + day)
+            } else {
+                $(".startme").val(year + '-0' + month + '-0' + day)
+            }
+        }
+        $('.cost').val(cost)
+
+
+    })
+
+    $('.popover-dismiss').popover({
+        trigger: 'focus'
+    })
+
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+
+
+    $('.ali').click(function () {
+
+        $('.idme').val($(this).data("id"))
+
+        $('select.roomme').val($(this).data("room"))
+
+        $('.slug').val($(this).data('slug'))
+
+        let sday = $(this).data("sday")
+        let smonth = $(this).data("smonth")
+        let syear = $(this).data("syear")
+
+        if (String(smonth).length > 1) {
+            if (String(sday).length > 1) {
+                $(".startme").val(syear + '-' + smonth + '-' + sday)
+            } else {
+                $(".startme").val(syear + '-' + smonth + '-0' + sday)
+            }
+        } else {
+            if (String(sday).length > 1) {
+                $(".startme").val(syear + '-0' + smonth + '-' + sday)
+            } else {
+                $(".startme").val(syear + '-0' + smonth + '-0' + sday)
+            }
+        }
+
+        let fday = $(this).data("fday")
+        let fmonth = $(this).data("fmonth")
+        let fyear = $(this).data("fyear")
+
+        if (String(fmonth).length > 1) {
+            if (String(fday).length > 1) {
+                $(".finishme").val(fyear + '-' + fmonth + '-' + fday)
+            } else {
+                $(".finishme").val(fyear + '-' + fmonth + '-0' + fday)
+            }
+        } else {
+            if (String(fday).length > 1) {
+                $(".finishme").val(fyear + '-0' + fmonth + '-' + fday)
+            } else {
+                $(".finishme").val(fyear + '-0' + fmonth + '-0' + fday)
+            }
+        }
+
+        $('.cost').val($(this).data("price"))
+
+        $('.name').val($(this).data("name"))
+
+        $('.phone').val($(this).data("phone"))
+
+        $('.email').val($(this).data("email"))
+
+
+    })
+</script>
+</body>
+</html>

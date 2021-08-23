@@ -1,0 +1,264 @@
+{% extends './layouts/base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Главная</title>
+{% endblock title %}
+{% block css %}
+        <link rel="icon" sizes="" type="image/png" href="img/logo.svg">
+
+    <link rel="stylesheet" href="{% static 'css/daterangepicker.css' %}">
+{% endblock %}
+
+{% block wrapper %}wrapper-home{% endblock wrapper %}
+
+{% block content %}
+
+
+        <section class="section1    position-relative">
+            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active"
+                         style="height: 100vh; background-image: url({% static 'img/home/headslide1.jpg' %}); background-size: cover; background-position: center">
+                    </div>
+                    <div class="carousel-item"
+                         style="height: 100vh; background-image: url({% static 'img/home/headslide2.png' %}); background-size: cover; background-position: center">
+                    </div>
+                    <div class="carousel-item"
+                         style="height: 100vh; background-image: url({% static 'img/home/headsliade3.png' %}); background-size: cover; background-position: center">
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+            <div class=" position-absolute d-flex w-100 " style="bottom: 128px">
+                <div class=" container text-right">
+
+
+                    <a href="{% with r_all|first as first_room %}
+                       {{ first_room.get_absolute_url }} {% endwith %}">
+                        <button class="btn position-relative mt-3"
+                                style="background: #000000; color: #F9ED35; font-size: 24px; width: 240px; height: 64px; margin-right: 52px">
+                            Забронировать
+                            <span class="position-absolute h-100 w-100 "
+                                  style="border: 2px solid #F9ED35; bottom: 10px; right: 10px">
+                    </span>
+                        </button>
+                    </a>
+
+                    <a class="text-decoration-none" style="color: #F4D65D; font-size: 24px"
+                       href="tel:+ 998 (70) 202-01-01">
+                        <button class="btn position-relative mt-3"
+                                style="background: #F4D65D; color: #000000; font-size: 24px; width: 240px; height: 64px; ">
+                            Позвонить
+                            <span class="position-absolute h-100 w-100 "
+                                  style="border: 2px solid #000000; bottom: 10px; right: 10px">
+                </span></button>
+                    </a>
+                </div>
+            </div>
+
+
+        </section>
+
+
+        <section class="section2">
+
+            <div class="container">
+                <div class="section2-content row">
+                    <div class="col-md-5 d-flex flex-column justify-content-end">
+                        <div class="bg-svet"></div>
+                        <p>
+                        <h2>
+                            Летний и зимний
+                            <br> бассейн
+                        </h2>
+                        </p>
+                        <span>
+                            120 кв.м летнего бассейна <br>
+                            с видом на горы. И уютный зимний <br>
+                            бассейн с регулируемой температурой <br> для вашего комфорта
+                        </span>
+                    </div>
+                    <div class="col-md-7 d-flex align-items-center">
+                        <img src="{% static 'img/home/33333.jpg' %}" class="img-fluid  w-100" alt="" srcset="">
+                    </div>
+                </div>
+
+                <div id="appartament">
+                    <iframe width="100%" height="550px" class="pool" src="https://www.youtube.com/embed/MnLpau1VpYQ"
+                            title="YouTube video player" frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen></iframe>
+                    <a href="{% url 'relax' %}">Что есть еще? →</a>
+                </div>
+
+                <img src="{% static 'img/home/appartament.jpg' %}" class="img-fluid appartament" alt="" srcset="">
+                <h2>
+                    Огромная территория для прогулок, <br>
+                    свежий горный воздух
+                </h2>
+
+                <div class="" id="kitchen">
+                    <div class="row kitchen">
+                        <div class="col-md-7 d-flex ">
+                            <img src="{% static 'img/home/salat.jpg' %}" class="img-fluid my-auto" alt="" srcset="">
+                        </div>
+                        <div class="col-md-5 d-flex flex-column justify-content-end">
+                            <div class="bg-svet"></div>
+
+                            <h2>
+                                Национальная <br>
+                                и европейская кухня
+                            </h2>
+                            <img src="{% static 'img/home/ice-cream.jpg' %}" class="img-fluid" style="margin-top: 40px;"
+                                 alt=""
+                                 srcset="">
+                        </div>
+                    </div>
+                </div>
+                <a class="m-0" href="{% url 'kitchen' %}">Подробнее о кухне →</a>
+            </div>
+
+        </section>
+
+
+        <section class="section3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p>
+                        <h2>
+                            Что о нас говорят гости
+                        </h2>
+                        </p>
+                        <div>
+                            Собрали честные отзывы наших гостей в соцсетях,
+                            в основном на Фэйсбуке.
+                        </div>
+                    </div>
+                </div>
+                <div class="row row-cols-md-3 row-cols-1">
+                    <div class="col">
+                        <div class="review">
+                            <div class="avatar" style="background-image: url({% static '/img/home/rew1.png' %}); ">
+                            </div>
+
+                            <div class="contant">
+                                <span>Бегзод</span>
+                                <div>
+                                    По рекомендации поехали праздновать день рождения сына в Heaven’s Garden. Аниматоры
+                                    впечатлили.
+                                    Дети счастливы – праздник удался.
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col">
+                        <div class="review">
+                            <div class="avatar" style="background-image: url({% static '/img/home/rew2.png' %}); ">
+                            </div>
+
+                            <div class="contant">
+                                <span>Нигора</span>
+                                <div>
+                                    Отдыхали в ХГ в июне с мужем. Понравилась кухня, особенно европейская. Советую
+                                    попробовать у
+                                    них куриные бедрышки и стейк Рибай)
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col">
+                        <div class="review">
+                            <div class="avatar" style="background-image: url({% static '/img/home/rew3.png' %}); ">
+                            </div>
+
+                            <div class="contant">
+                                <span>Стас</span>
+                                <div>
+                                    В Хэвансе был два раза. Один раз с друзьями, второй раз один. Не вылезал из хаммама
+                                    и
+                                    соляной пещеры. В этом сезоне поеду еще раз точно.
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section4">
+            <div class="container">
+                <h2>Как до нас добраться?</h2>
+                <div class="contacts">
+                    <div class="row row-cols-md-2 row-cols-1">
+                        <div class="col info">
+                            <span>
+                                <img src="{% static 'img/home/location.svg' %}" class="img-fluid" alt="" srcset="">
+                                <div>Адрес</div>
+                            </span>
+                            <div class="text">
+                                Бостанлыкский район, заповедник Акташ
+                            </div>
+
+                            <span>
+                                <img src="{% static 'img/home/transport.svg' %}" class="img-fluid" alt="" srcset="">
+                                <div>Трансфер</div>
+                            </span>
+                            <div class="text">
+                                Наш минибас Hyundai заберет вас с Ташкента,
+                                и отвезет обратно. Автомобиль вмещает 10 человек. Стоимость поездки в одну сторону
+                                600.000
+                                сумов.
+                                <br>
+                                <br>
+                                На остальной транспорт цена договорная.
+                            </div>
+
+                            <span>
+                                <img src="{% static 'img/home/telephone.svg' %}" class="img-fluid" alt="" srcset="">
+                                <div>Бронь по телефону:</div>
+                            </span>
+                            <a href="tel: + 998 (70) 202-01-01">+ 998 (70) 202-01-01</a>
+                        </div>
+                        <div class="col">
+                            <iframe
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2981.6574305678355!2d69.76208961569786!3d41.641535588163336!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x38af1f12f3fdd549%3A0xd2c20fbfbf97306d!2z0JPQvtGB0YLQuNC90LjRh9C90YvQuSDQutC-0LzQv9C70LXQutGBICJIZWF2ZW4ncyBHYXJkZW4i!5e0!3m2!1sru!2s!4v1626371523927!5m2!1sru!2s"
+                                    width="100%" height="100%" style="border:0;" allowfullscreen=""
+                                    loading="lazy"></iframe>
+                        </div>
+                    </div>
+                    <a class="btn "
+                       href="https://www.google.com/maps?ll=41.641532,69.764278&z=16&t=m&hl=ru&gl=US&mapclient=embed&daddr=%D0%93%D0%BE%D1%81%D1%82%D0%B8%D0%BD%D0%B8%D1%87%D0%BD%D1%8B%D0%B9+%D0%BA%D0%BE%D0%BC%D0%BF%D0%BB%D0%B5%D0%BA%D1%81+%22Heaven%27s+Garden%22+41.641702+69+763834@41.6415316,69.7642783">Посмотреть
+                        маршрут</a>
+                </div>
+            </div>
+
+        </section>
+
+{% endblock content %}
+
+
+
+
+
+
+{% block js %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
+    <script src="{% static 'js/moment.min.js' %}"></script>
+    <script src="{% static 'js/daterangepicker.js' %}"></script>
+{% endblock %}
+

@@ -1,0 +1,226 @@
+{% extends './layouts/base.html' %}
+{% load static %}
+
+{% block title %}
+    <title>Кухня</title>
+{% endblock title %}
+{% block css %}
+        <link rel="icon" sizes="" type="image/png" href="img/logo.svg">
+
+{% endblock %}
+
+{% block wrapper %}wrapper-kitchen{% endblock wrapper %}
+
+{% block content %}
+
+        <section class="section1 " style="padding-top: 50px !important">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="content">
+                            <h1 class="title">
+                                Кухня
+                                Heaven’s
+                                Garden
+                            </h1>
+                            <div class="text-head">
+                                Национальная и европейская <br> кухня от лучших шеф-поваров
+                            </div>
+                            <a href="#menu" class="scroll d-flex align-items-end">
+                                <img src="{% static 'img/kitchen/scroll.png' %}" class="img-fluid" alt="" srcset="">
+                                <div class="scroll-text">Посмотреть меню</div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-7">
+                        <img src="{% static 'img/kitchen/head.jpg' %}" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="section2">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6 order-md-1 order-2">
+                        <img src="{% static 'img/kitchen/2-1-1.jpg' %}" class="img-fluid" alt="">
+                        <img src="{% static 'img/kitchen/2-1-2.jpg' %}" class="img-fluid" alt="">
+                        <img src="{% static 'img/kitchen/2-1-3.jpg' %}" class="img-fluid d-none d-md-block" alt="">
+                        <img src="{% static 'img/kitchen/2-1-4.jpg' %}" class="img-fluid d-none d-md-block" alt="">
+                    </div>
+                    <div class="col-md-6 order-md-2 order-1 ">
+                        <h2 class="text position-relative">
+                            <div class="bg-svet"></div>
+
+                            Национальная <br>
+                            и европейская <br> кухня
+                        </h2>
+                        <img src="{% static 'img/kitchen/2-2-1.jpg' %}" class="img-fluid d-none d-md-block" alt="">
+                        <img src="{% static 'img/kitchen/2-2-2.jpg' %}" class="img-fluid d-none d-md-block" alt="">
+                        <img src="{% static 'img/kitchen/2-2-3.jpg' %}" class="img-fluid" alt="">
+                        <img src="{% static 'img/kitchen/2-2-4.jpg' %}" class="img-fluid" alt="">
+
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+
+        <section class="section3">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 order-10">
+                        <img src="{% static 'img/kitchen/3.jpg' %}" alt="" class="img-fluid">
+                    </div>
+                    <div class="col-md-4 order-1">
+                        <h2>Алкоголь самых
+                            благородных сортов</h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section4">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h2>
+                            Десятки видов
+                            коктейлей <br>
+                            на любой вкус
+                        </h2>
+                    </div>
+                    <div class="col-md-8 text-right">
+                        <img src="{% static 'img/kitchen/4.jpg' %}" alt="" class="img-fluid">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section5">
+            <div class="container">
+                <div class="row row-cols-md-2 row-cols-1">
+                    <div class="col d-flex flex-column justify-content-end">
+                        <h2 class="text position-relative">
+                            <div class="bg-svet"></div>
+
+                            3 ресторана <br>
+                            с уникальным <br>
+                            интерьером
+                        </h2>
+                        <img src="{% static 'img/kitchen/5-1-1.jpg' %}" alt="" class="img-fluid ">
+                        <img src="{% static 'img/kitchen/5-1-2.jpg' %}" alt="" class="img-fluid last">
+
+                    </div>
+                    <div class="col">
+                        <img src="{% static 'img/kitchen/5-2-1.jpg' %}" alt="" class="img-fluid ">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="menu" id="menu">
+            <div class="container">
+                <h2>Меню</h2>
+                <div class="menu-inner">
+                    <ul class="nav nav-tabs row pl-3" id="myTab" role="tablist">
+
+
+                        {% for mm in m %}
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link " id="home-tab{{ mm.id }}" data-toggle="tab" href="#home{{ mm.id }}"
+                                   role="tab"
+                                   aria-controls="home" aria-selected="true">{{ mm }}</a>
+                            </li>
+                            <div class="br">
+                                <div class="li">&#8226</div>
+                            </div>
+                        {% endfor %}
+
+
+                        <div class="col line">
+                            <img src="{% static 'img/kitchen/menu-line.png' %}" class="img-fluid line" alt="">
+                        </div>
+
+                    </ul>
+
+                    <div class="tab-content" id="myTabContent">
+
+                        {% for menu in m %}
+                            <div class="tab-pane fade show  " id="home{{ menu.id }}" role="tabpanel"
+                                 aria-labelledby="home-tab{{ menu.id }}">
+                                <div class="row ">
+                                    <div class="col-lg-5 ">
+
+                                        {% load my_filter %}
+
+                                        {% for m in menu.items_set.all %}
+                                            {% if forloop.counter <= menu.items_set.all|leng %}
+                                                <div class="item">
+                                                    <div class="dish">
+                                                        {{ m.dish }}
+                                                    </div>
+                                                    <div class="span"></div>
+                                                    <div class="cost">
+                                                        <div>
+                                                            {{ m.cost }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+
+                                    </div>
+                                    <div class="col-lg-5 offset-lg-1">
+                                        {% for m in menu.items_set.all %}
+                                            {% if forloop.counter > menu.items_set.all|leng %}
+                                                <div class="item">
+                                                    <div class="dish">
+                                                        {{ m.dish }}
+                                                    </div>
+                                                    <div class="span"></div>
+                                                    <div class="cost">
+                                                        <div>
+                                                            {{ m.cost }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endif %}
+
+
+                                        {% endfor %}
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+
+                    </div>
+
+                    <div class="row menu-last align-items-center px-3">
+                        <div class="">
+                            <img src="{% static 'img/kitchen/menu-last.png' %}" class="img-fluid" alt="">
+                        </div>
+                        <div class="text">
+                            И еще более 400 <br>
+                            видов блюд, <br>
+                            напитков и десертов
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+{% endblock content %}
+
+
+{% block js %}
+{% endblock %}
+
+
